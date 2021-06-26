@@ -14,10 +14,9 @@ class Student:
         self.grades = {}
 
     def av_grade(self):
-        av_grade= 0
-        for grade in self.grades:
-            av_grade += int(sum(self.grades[grade])) / len(self.grades[grade])
-        return av_grade
+        for course, grade in self.grades.items():
+            result = {course: sum(grade)/len(grade)}
+        return result
 
     def l_grade(self, lecture, course, grade):
         if isinstance(lecture, Lecture) and course in lecture.courses_attached and course in self.courses_in_progress:
@@ -42,10 +41,9 @@ class Lecture(Mentor):
         self.grades = {}
 
     def av_grade(self):
-        av_grade= 0
-        for grade in self.grades:
-            av_grade += int(sum(self.grades[grade])) / len(self.grades[grade])
-        return av_grade
+        for course, grade in self.grades.items():
+            result = sum(grade) / len(grade)
+        return result
 
     def __str__(self):
         info = f'Имя: {self.name} ' \
@@ -115,3 +113,5 @@ best_student.l_grade(best_lecture, 'Python', 9)
 good_student.l_grade(best_lecture, 'Python', 10)
 print(best_lecture.av_grade())
 print(soso_lecture < best_lecture)
+
+print(best_student.av_grade())
