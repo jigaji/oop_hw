@@ -13,6 +13,12 @@ class Student:
         self.courses_in_progress = []
         self.grades = {}
 
+    def av_grade(self):
+        av_grade= 0
+        for grade in self.grades:
+            av_grade += int(sum(self.grades[grade])) / len(self.grades[grade])
+        return av_grade
+
     def l_grade(self, lecture, course, grade):
         if isinstance(lecture, Lecture) and course in lecture.courses_attached and course in self.courses_in_progress:
             if course in lecture.grades:
@@ -22,11 +28,36 @@ class Student:
         else:
             return 'Ошибка'
 
+    def __str__(self):
+        info = f'Имя: {self.name} ' \
+               f'\nФамилия: {self.surname} ' \
+               f'\nСредняя оценка за домашние задания: {self.av_grade()}' \
+               f'\nКурсы в процессе обучения: {self.courses_in_progress}'\
+               f'\nЗавершенные курсы: {self.finished_courses}'
+        return info
+
 class Lecture(Mentor):
     def __init__(self, name, surname):
         super().__init__(name, surname)
         self.grades = {}
 
+    def av_grade(self):
+        av_grade= 0
+        for grade in self.grades:
+            av_grade += int(sum(self.grades[grade])) / len(self.grades[grade])
+        return av_grade
+
+    def __str__(self):
+        info = f'Имя: {self.name} ' \
+               f'\nФамилия: {self.surname} ' \
+               f'\nСредняя оценка за лекции: {self.av_grade()}'
+        return info
+
+    def __lt__(self, other):
+        if not isinstance(other, Lecture):
+            print('Не является лектором!')
+            return
+        return self.av_grade() < other.av_grade()
 
 class Reviewer(Mentor):
     def __init__(self, name, surname):
@@ -42,8 +73,14 @@ class Reviewer(Mentor):
         else:
             return 'Ошибка'
 
+    def __str__(self):
+        info = f'Имя: {self.name} \nФамилия: {self.surname}'
+        return info
+
+
 best_student = Student('Ruoy', 'Eman', 'your_gender')
-best_student.courses_in_progress += ['Python']
+best_student.courses_in_progress += ['Python', 'Git']
+best_student.finished_courses += ['Введение в программирование']
 
 
 cool_reviewer = Reviewer('Re', 'Viewer')
@@ -65,3 +102,16 @@ best_student.l_grade(soso_lecture, 'Python', 7)
 good_student.l_grade(soso_lecture, 'Python', 6)
 
 print(soso_lecture.grades)
+
+print(cool_reviewer)
+
+print(soso_lecture)
+
+print(best_student)
+
+best_lecture = Lecture('The', 'Best')
+best_lecture.courses_attached += ['Python']
+best_student.l_grade(best_lecture, 'Python', 9)
+good_student.l_grade(best_lecture, 'Python', 10)
+print(best_lecture.av_grade())
+print(soso_lecture < best_lecture)
